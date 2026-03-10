@@ -83,7 +83,7 @@ public static class FileManager
         if (File.Exists(filePath))
         {
             File.Delete(filePath);
-            Console.WriteLine($"✓ Deck '{deckName}' deleted.");
+            Console.WriteLine($"Deck '{deckName}' deleted.");
         }
     }
 

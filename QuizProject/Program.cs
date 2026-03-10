@@ -27,17 +27,7 @@ class Program
         {
             menuManager.ShowMainMenu();
             string choice = Console.ReadLine();
-
-            if (choice == "7")
-            {
-                deckManager.SaveAllDecks();
-                running = false;
-                Console.WriteLine("Thank you for studying! Goodbye!");
-            }
-            else
-            {
-                menuManager.HandleMainMenuChoice(choice);
-            }
+            running = menuManager.HandleMainMenuChoice(choice);
         }
     }
 }

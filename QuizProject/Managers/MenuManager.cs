@@ -30,7 +30,7 @@ public sealed class MenuManager
     }
 
     // Pattern matching is used (1 point) with switch expressions
-    public void HandleMainMenuChoice(string choice)
+    public bool HandleMainMenuChoice(string choice)
     {
         var action = choice switch
         {
@@ -40,10 +40,12 @@ public sealed class MenuManager
             "4" => _studyManager.StudyWeakCards,
             "5" => ShowDeckManagementMenu,
             "6" => _statsManager.ViewStatistics,
+            "7" => () => { _deckManager.SaveAllDecks(); Console.WriteLine("Thank you for studying! Goodbye!"); },
             _ => () => Console.WriteLine("Invalid choice.")
         };
-        
+
         action();
+        return choice != "7";
     }
 
     private void ShowDeckManagementMenu()
@@ -63,30 +65,18 @@ public sealed class MenuManager
 
     private void HandleDeckManagementChoice(string choice)
     {
-        switch (choice)
+        var action = choice switch
         {
-            case "1":
-                _deckManager.CreateDeck();
-                break;
-            case "2":
-                _deckManager.AddCardToDeck();
-                break;
-            case "3":
-                _deckManager.ViewDecks();
-                break;
-            case "4":
-                _deckManager.DeleteDeck();
-                break;
-            case "5":
-                _deckManager.ExportDeck();
-                break;
-            case "6":
-                _deckManager.ImportDeck();
-                break;
-            default:
-                Console.WriteLine("Invalid choice. Please try again.");
-                break;
-        }
+            "1" => (Action)_deckManager.CreateDeck,
+            "2" => _deckManager.AddCardToDeck,
+            "3" => _deckManager.ViewDecks,
+            "4" => _deckManager.DeleteDeck,
+            "5" => _deckManager.ExportDeck,
+            "6" => _deckManager.ImportDeck,
+            _ => () => Console.WriteLine("Invalid choice. Please try again.")
+        };
+
+        action();
     }
 }
 

@@ -42,16 +42,20 @@ public class DeckManager
         Console.Write("\nEnter new deck name: ");
         string name = Console.ReadLine();
 
-        if (!string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(name))
+        {
+            Console.WriteLine("Deck name cannot be empty. Please try again.");
+        }
+        else if (_decks.Exists(d => d.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
+        {
+            Console.WriteLine($"A deck named '{name}' already exists.");
+        }
+        else
         {
             var deck = new Deck(name);
             _decks.Add(deck);
             FileManager.SaveDeck(deck);
             Console.WriteLine($"Deck '{name}' created successfully.");
-        }
-        else
-        {
-            Console.WriteLine("Deck name cannot be empty. Please try again.");
         }
     }
 
@@ -105,8 +109,7 @@ public class DeckManager
         {
             Console.WriteLine($"\n");
             Console.WriteLine($"   {deck.Name}");
-            Console.WriteLine($"   Cards: {deck.Cards.Count}");
-            Console.WriteLine($"   Weak cards: {deck.WeakCards.Count}");
+            deck.PrintSummary();
         }
         Console.WriteLine();
     }

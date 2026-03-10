@@ -14,10 +14,15 @@ public class StudySessionManager
         _random = new Random();
     }
 
+    private bool TrySelectDeck(out Deck deck)
+    {
+        deck = _deckManager.SelectDeck();
+        return deck != null;
+    }
+
     public void StudyFlashcards()
     {
-        var deck = _deckManager.SelectDeck();
-        if (deck == null) return;
+        if (!TrySelectDeck(out var deck)) return;
 
         if (deck.Cards.Count == 0)
         {
@@ -37,7 +42,7 @@ public class StudySessionManager
 
             // Deconstruct (0.5 taško)
             var (_, answer) = card; // discard pattern
-            Console.WriteLine($"→ Answer: {answer}");
+            Console.WriteLine($"Answer: {answer}");
             Console.Write("Were you correct? (y/n): ");
             string response = Console.ReadLine()?.ToLower();
             
@@ -60,8 +65,7 @@ public class StudySessionManager
 
     public void MultipleChoiceTest()
     {
-        var deck = _deckManager.SelectDeck();
-        if (deck == null) return;
+        if (!TrySelectDeck(out var deck)) return;
 
         // Delegates or lambda functions (1.5 taško)
         var cardsWithOptions = deck.Cards.Where(c => c.MultipleChoiceOptions.Count >= 4).ToList();
@@ -115,8 +119,7 @@ public class StudySessionManager
 
     public void TimedTest()
     {
-        var deck = _deckManager.SelectDeck();
-        if (deck == null) return;
+        if (!TrySelectDeck(out var deck)) return;
 
         if (deck.Cards.Count == 0)
         {
@@ -177,8 +180,7 @@ public class StudySessionManager
 
     public void StudyWeakCards()
     {
-        var deck = _deckManager.SelectDeck();
-        if (deck == null) return;
+        if (!TrySelectDeck(out var deck)) return;
 
         if (deck.WeakCards.Count == 0)
         {
@@ -199,7 +201,7 @@ public class StudySessionManager
             Console.Write("(Press ENTER to reveal answer) ");
             Console.ReadLine();
 
-            Console.WriteLine($"→ Answer: {card.Answer}");
+            Console.WriteLine($"Answer: {card.Answer}");
             Console.Write("Were you correct? (y/n): ");
             string response = Console.ReadLine()?.ToLower();
             

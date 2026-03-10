@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 
 public class Deck
@@ -43,6 +44,19 @@ public class Deck
     public void RemoveFromWeakCards(Flashcard card)
     {
         WeakCards.Remove(card);
+    }
+
+    public double GetSuccessRate()
+    {
+        int totalReviews = Cards.Sum(c => c.TimesReviewed);
+        int totalCorrect = Cards.Sum(c => c.CorrectCount);
+        return totalReviews == 0 ? 0 : (double)totalCorrect / totalReviews * 100;
+    }
+
+    public void PrintSummary()
+    {
+        Console.WriteLine($"   Cards: {Cards.Count}");
+        Console.WriteLine($"   Weak cards: {WeakCards.Count}");
     }
 
     private void RebuildWeakCards()

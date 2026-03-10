@@ -32,15 +32,13 @@ public class StatisticsManager
     private void DisplayDeckStatistics(Deck deck)
     {
         Console.WriteLine($"\n>> {deck.Name}");
-        Console.WriteLine($"   Cards: {deck.Cards.Count}");
-        Console.WriteLine($"   Weak cards: {deck.WeakCards.Count}");
-        
+        deck.PrintSummary();
+
         int totalReviews = deck.Cards.Sum(c => c.TimesReviewed);
         int totalCorrect = deck.Cards.Sum(c => c.CorrectCount);
-        double successRate = totalReviews > 0 ? (double)totalCorrect / totalReviews * 100 : 0;
-        
+
         Console.WriteLine($"   Reviews: {totalReviews}");
-        Console.WriteLine($"   Success rate: {successRate:F1}%");
+        Console.WriteLine($"   Success rate: {deck.GetSuccessRate():F1}%");
         
         if (deck.Cards.Count > 0)
         {
