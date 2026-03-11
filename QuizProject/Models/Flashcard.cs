@@ -21,6 +21,7 @@ public class Flashcard : IComparable<Flashcard>, IEquatable<Flashcard>, IFormatt
         ConsecutiveCorrect = 0;
     }
 
+    // Default and named arguments are used (0.5 points)
     public Flashcard(string question, string answer, List<string> options = null)
     {
         Question = question;

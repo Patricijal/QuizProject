@@ -12,7 +12,7 @@ public static class FileManager
         PropertyNameCaseInsensitive = true
     };
 
-    // Static constructor is used (1 taškas)
+    // A static constructor is used (1 point)
     static FileManager()
     {
         if(!Directory.Exists(DecksFolder))
