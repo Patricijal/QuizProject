@@ -4,6 +4,7 @@ using System.Linq;
 
 public class StatisticsManager
 {
+    // Data structures from System.Collections or System.Collections.Generic are used (1 point)
     private readonly List<Deck> _decks;
 
     public StatisticsManager(List<Deck> decks)
@@ -31,40 +32,51 @@ public class StatisticsManager
 
     private void DisplayDeckStatistics(Deck deck)
     {
+        DisplayDeckHeader(deck);
+        DisplayDeckReviewStats(deck);
+        DisplayWeakestCards(deck);
+    }
+
+    private void DisplayDeckHeader(Deck deck)
+    {
         Console.WriteLine($"\n>> {deck.Name}");
         deck.PrintSummary();
+    }
 
+    private void DisplayDeckReviewStats(Deck deck)
+    {
         int totalReviews = deck.Cards.Sum(c => c.TimesReviewed);
-        int totalCorrect = deck.Cards.Sum(c => c.CorrectCount);
 
         Console.WriteLine($"   Reviews: {totalReviews}");
         Console.WriteLine($"   Success rate: {deck.GetSuccessRate():F1}%");
-        
-        if (deck.Cards.Count > 0)
+    }
+
+    private void DisplayWeakestCards(Deck deck)
+    {
+        if (deck.Cards.Count == 0) return;
+
+        // IComparable<T> - rūšiuoja per CompareTo (0.5 taško)
+        var sorted = deck.Cards
+            .Where(c => c.TimesReviewed > 0) // Delegates or lambda functions are used (1.5 points)
+            .OrderBy(c => c)  // naudoja CompareTo
+            .ToList();
+
+        // You use the Range type(0.5 points)
+        var top3Weakest = sorted[..Math.Min(3, sorted.Count)];
+
+        if (top3Weakest.Count == 0) return;
+
+        Console.WriteLine("   Top weakest cards:");
+        foreach (var card in top3Weakest)
         {
-            // IComparable<T> - rūšiuoja per CompareTo (0.5 taško)
-            var sorted = deck.Cards
-                .Where(c => c.TimesReviewed > 0)
-                .OrderBy(c => c)  // naudoja CompareTo
-                .ToList();
-
-            // Range type (0.5 taško)
-            var top3Weakest = sorted[..Math.Min(3, sorted.Count)];
-
-            if (top3Weakest.Count > 0)
-            {
-                Console.WriteLine("   Top weakest cards:");
-                foreach (var card in top3Weakest)
-                {
-                    var (question, answer) = card;
-                    Console.WriteLine($"     - {question}: {answer} ({card:S})");
-                }
-            }
+            var (question, answer) = card;
+            Console.WriteLine($"     - {question}: {answer} ({card:S})");
         }
     }
 
     private void DisplayOverallStatistics()
     {
+        // Delegates or lambda functions are used (1.5 points)
         int totalCards = _decks.Sum(d => d.Cards.Count);
         int totalReviews = _decks.Sum(d => d.Cards.Sum(c => c.TimesReviewed));
         int totalCorrect = _decks.Sum(d => d.Cards.Sum(c => c.CorrectCount));

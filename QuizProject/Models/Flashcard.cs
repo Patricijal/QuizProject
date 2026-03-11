@@ -73,6 +73,7 @@ public class Flashcard : IComparable<Flashcard>, IEquatable<Flashcard>, IFormatt
         _ => $"Q: {Question} | A: {Answer}"
     };
 
+    // A deconstructor is used (0.5 points)
     public void Deconstruct(out string question, out string answer)
     {
         question = Question;

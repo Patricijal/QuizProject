@@ -20,7 +20,7 @@ public class DeckManager
         }
 
         Console.WriteLine("\nSeleck deck:");
-        for (int i = 0; i< _decks.Count; i++)
+        for (int i = 0; i < _decks.Count; i++)
         {
             Console.WriteLine($"{i + 1}. {_decks[i].Name} ({_decks[i].Cards.Count} cards)");
         }
@@ -56,6 +56,17 @@ public class DeckManager
             _decks.Add(deck);
             FileManager.SaveDeck(deck);
             Console.WriteLine($"Deck '{name}' created successfully.");
+
+            Console.Write("Would you like to add a card to this deck? (y/n): ");
+            if (Console.ReadLine()?.ToLower() == "y")
+            {
+                do
+                {
+                    AddCardToDeck(deck);
+                    Console.Write("Add another card? (y/n): ");
+                }
+                while (Console.ReadLine()?.ToLower() == "y");
+            }
         }
     }
 
@@ -64,6 +75,16 @@ public class DeckManager
         var deck = SelectDeck();
         if (deck == null) return;
 
+        do
+        {
+            AddCardToDeck(deck);
+            Console.Write("Add another card? (y/n): ");
+        }
+        while (Console.ReadLine()?.ToLower() == "y");
+    }
+
+    public void AddCardToDeck(Deck deck)
+    {
         Console.Write("Question/Term: ");
         string question = Console.ReadLine();
         Console.Write("Answer: ");
@@ -78,7 +99,7 @@ public class DeckManager
         Console.Write("Add 4 options? (y/n): ");
         List<string> options = new List<string>();
 
-        if (Console.ReadLine()?.ToLower() == "y") // Operators ?., ?[], ??, or ??= (0.5 taško)
+        if (Console.ReadLine()?.ToLower() == "y") // Operators ?., ?[], ??, or ??= are used (0.5 points)
         {
             options.Add(answer);
             for (int i = 1; i < 4; i++)
@@ -95,6 +116,45 @@ public class DeckManager
         deck.AddCard(new Flashcard(question, answer, options));
         FileManager.SaveDeck(deck);
         Console.WriteLine("Card added successfully.");
+    }
+
+    public void DeleteCardFromDeck()
+    {
+        var deck = SelectDeck();
+        if (deck == null) return;
+
+        if (deck.Cards.Count == 0)
+        {
+            Console.WriteLine("This deck has no cards to delete.");
+            return;
+        }
+
+        Console.WriteLine($"\nCards in '{deck.Name}':");
+        for (int i = 0; i < deck.Cards.Count; i++)
+        {
+            Console.WriteLine($"{i + 1}. Q: {deck.Cards[i].Question} | A: {deck.Cards[i].Answer}");
+        }
+        Console.Write("Enter the number of the card to delete: ");
+
+        if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= deck.Cards.Count)
+        {
+            var card = deck.Cards[choice - 1];
+            Console.Write($"Are you sure you want to delete '{card.Question}'? (y/n): ");
+            if (Console.ReadLine()?.ToLower() == "y")
+            {
+                deck.RemoveCard(card);
+                FileManager.SaveDeck(deck);
+                Console.WriteLine("Card deleted successfully.");
+            }
+            else
+            {
+                Console.WriteLine("Cancelled. Card not deleted.");
+            }
+        }
+        else
+        {
+            Console.WriteLine("Invalid selection.");
+        }
     }
 
     public void ViewDecks()
@@ -120,7 +180,7 @@ public class DeckManager
         if (deck == null) return;
 
         Console.Write($"Are you sure you want to delete the deck '{deck.Name}'? (y/n): ");
-        if (Console.ReadLine()?.ToLower() == "y")
+        if (Console.ReadLine()?.ToLower() == "y") // Operators ?., ?[], ??, or ??= are used (0.5 points)
         {
             FileManager.DeleteDeck(deck.Name);
             _decks.Remove(deck);
@@ -183,15 +243,15 @@ public class DeckManager
         var geography = new Deck("Geography");
         geography.AddCard(new Flashcard("What is the capital of France?", "Paris",
             new List<string> { "Paris", "London", "Berlin", "Madrid" }));
-        geography.AddCard(new Flashcard("What is the capital of Lithuania?", "Vilnius", 
+        geography.AddCard(new Flashcard("What is the capital of Lithuania?", "Vilnius",
             new List<string> { "Vilnius", "Kaunas", "Riga", "Tallinn" }));
-        geography.AddCard(new Flashcard("What is the largest ocean in the world?", "Pacific", 
+        geography.AddCard(new Flashcard("What is the largest ocean in the world?", "Pacific",
             new List<string> { "Pacific", "Atlantic", "Indian", "Arctic" }));
 
         var math = new Deck("Mathematics");
         math.AddCard(new Flashcard("What is 2 + 2?", "4",
             new List<string> { "4", "3", "5", "22" }));
-        math.AddCard(new Flashcard("What is 5 × 6?", "30", 
+        math.AddCard(new Flashcard("What is 5 × 6?", "30",
             new List<string> { "30", "25", "35", "56" }));
         math.AddCard(new Flashcard("What is 100 ÷ 4?", "25",
             new List<string> { "25", "20", "24", "50" }));

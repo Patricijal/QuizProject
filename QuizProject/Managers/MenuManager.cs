@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Net.NetworkInformation;
 
 // You use a sealed or partial class (0.5 points)
@@ -29,7 +30,7 @@ public sealed class MenuManager
         Console.Write("Choose (1-7): ");
     }
 
-    // Pattern matching is used (1 point) with switch expressions
+    // Pattern matching is used (1 point)
     public bool HandleMainMenuChoice(string choice)
     {
         var action = choice switch
@@ -55,14 +56,16 @@ public sealed class MenuManager
         Console.WriteLine("2. Add card to deck");
         Console.WriteLine("3. View decks");
         Console.WriteLine("4. Delete deck");
-        Console.WriteLine("5. Export deck");
-        Console.WriteLine("6. Import deck");
-        Console.Write("Choose (1-6): ");
+        Console.WriteLine("5. Delete card from deck");
+        Console.WriteLine("6. Export deck");
+        Console.WriteLine("7. Import deck");
+        Console.Write("Choose (1-7): ");
 
         string choice = Console.ReadLine();
         HandleDeckManagementChoice(choice);
     }
 
+    // Pattern matching is used (1 point)
     private void HandleDeckManagementChoice(string choice)
     {
         var action = choice switch
@@ -71,8 +74,9 @@ public sealed class MenuManager
             "2" => _deckManager.AddCardToDeck,
             "3" => _deckManager.ViewDecks,
             "4" => _deckManager.DeleteDeck,
-            "5" => _deckManager.ExportDeck,
-            "6" => _deckManager.ImportDeck,
+            "5" => _deckManager.DeleteCardFromDeck,
+            "6" => _deckManager.ExportDeck,
+            "7" => _deckManager.ImportDeck,
             _ => () => Console.WriteLine("Invalid choice. Please try again.")
         };
 

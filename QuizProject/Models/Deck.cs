@@ -32,6 +32,12 @@ public class Deck
         Cards.Add(card);
     }
 
+    public void RemoveCard(Flashcard card)
+    {
+        Cards.Remove(card);
+        WeakCards.Remove(card);
+    }
+
     public void AddToWeakCards(Flashcard card)
     {
         if (!WeakCards.Contains(card))
