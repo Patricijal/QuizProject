@@ -1,0 +1,44 @@
+{
+  "Name": "Geography",
+  "Cards": [
+    {
+      "Question": "What is the capital of France?",
+      "Answer": "Paris",
+      "MultipleChoiceOptions": [
+        "Paris",
+        "London",
+        "Berlin",
+        "Madrid"
+      ],
+      "TimesReviewed": 0,
+      "CorrectCount": 0,
+      "ConsecutiveCorrect": 0
+    },
+    {
+      "Question": "What is the capital of Lithuania?",
+      "Answer": "Vilnius",
+      "MultipleChoiceOptions": [
+        "Vilnius",
+        "Kaunas",
+        "Riga",
+        "Tallinn"
+      ],
+      "TimesReviewed": 0,
+      "CorrectCount": 0,
+      "ConsecutiveCorrect": 0
+    },
+    {
+      "Question": "What is the largest ocean in the world?",
+      "Answer": "Pacific",
+      "MultipleChoiceOptions": [
+        "Pacific",
+        "Atlantic",
+        "Indian",
+        "Arctic"
+      ],
+      "TimesReviewed": 0,
+      "CorrectCount": 0,
+      "ConsecutiveCorrect": 0
+    }
+  ]
+}

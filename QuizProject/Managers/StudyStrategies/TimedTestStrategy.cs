@@ -34,7 +34,7 @@ public class TimedTestStrategy : IStudyStrategy
         int answered = 0;
         int correct = 0;
 
-        foreach (var card in deck.Cards)
+        foreach (var card in deck)
         {
             if (stopwatch.Elapsed.TotalSeconds >= timeLimit)
             {

@@ -4,17 +4,19 @@ public class WeakCardsStrategy : IStudyStrategy
 {
     public void Run(Deck deck)
     {
-        if (deck.WeakCards.Count == 0)
+        var weakCards = deck.GetWeakCardsIterator().ToList();
+
+        if (weakCards.Count == 0)
         {
             Console.WriteLine("\nNo weak cards! Excellent!\n");
             return;
         }
 
         Console.WriteLine($"\nWeak Cards: {deck.Name}");
-        Console.WriteLine($"Number of cards: {deck.WeakCards.Count}");
+        Console.WriteLine($"Number of cards: {weakCards.Count}");
         Console.WriteLine("(Need to answer correctly 5 times in a row)\n");
 
-        foreach (var card in deck.WeakCards.ToList())
+        foreach (var card in weakCards)
             ReviewWeakCard(card, deck);
 
         Console.WriteLine($"Weak cards remaining: {deck.WeakCards.Count}\n");

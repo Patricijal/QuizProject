@@ -5,7 +5,7 @@ public class FlashcardStudyStrategy : IStudyStrategy
         Console.WriteLine($"\nStudy Session: {deck.Name}");
         Console.WriteLine("(Press ENTER to reveal answer)\n");
 
-        foreach (var card in deck.Cards)
+        foreach (var card in deck)
             StudyCard(card, deck);
 
         Console.WriteLine("Study session complete\n");
