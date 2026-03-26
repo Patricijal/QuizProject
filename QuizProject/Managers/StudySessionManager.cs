@@ -10,7 +10,7 @@ public class StudySessionManager
     }
 
     // Initialization using out arguments is implemented (1 point)
-    private bool TrySelectDeck(out Deck deck)
+    private bool TrySelectDeck(out Deck? deck)
     {
         deck = _deckManager.SelectDeck();
         return deck != null;
@@ -18,7 +18,7 @@ public class StudySessionManager
 
     public void StartSession(IStudyStrategy mode)
     {
-        if (!TrySelectDeck(out var deck)) return;
+        if (!TrySelectDeck(out var deck) || deck == null) return;
 
         if (deck.Cards.Count == 0)
         {

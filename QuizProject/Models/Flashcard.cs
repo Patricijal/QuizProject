@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-public class Flashcard : IComparable<Flashcard>, IEquatable<Flashcard>, IFormattable
+public class Flashcard : IComparable<Flashcard>, IEquatable<Flashcard>, IFormattable, ICloneable
 {
     public string Question { get; set; }
     public string Answer { get; set; }
@@ -22,7 +22,7 @@ public class Flashcard : IComparable<Flashcard>, IEquatable<Flashcard>, IFormatt
     }
 
     // Default and named arguments are used (0.5 points)
-    public Flashcard(string question, string answer, List<string> options = null)
+    public Flashcard(string question, string answer, List<string>? options = null)
     {
         Question = question;
         Answer = answer;
@@ -49,24 +49,24 @@ public class Flashcard : IComparable<Flashcard>, IEquatable<Flashcard>, IFormatt
     }
 
     // You correctly implemented IComparable<T> (0.5 points)
-    public int CompareTo(Flashcard other)
+    public int CompareTo(Flashcard? other)
     {
         if (other == null) return 1;
         return GetSuccessRate().CompareTo(other.GetSuccessRate());
     }
 
     // You correctly implemented IEquatable<T> (0.5 points)
-    public bool Equals(Flashcard other)
+    public bool Equals(Flashcard? other)
     {
         if (other == null) return false;
         return Question == other.Question && Answer == other.Answer;
     }
 
-    public override bool Equals(object obj) => Equals(obj as Flashcard);
+    public override bool Equals(object? obj) => Equals(obj as Flashcard);
     public override int GetHashCode() => HashCode.Combine(Question, Answer);
 
     // You correctly implemented IFormattable (1 point)
-    public string ToString(string format, IFormatProvider formatProvider) => format switch
+    public string ToString(string? format, IFormatProvider? formatProvider) => format switch
     {
         "Q" => Question,
         "A" => Answer,
@@ -79,5 +79,20 @@ public class Flashcard : IComparable<Flashcard>, IEquatable<Flashcard>, IFormatt
     {
         question = Question;
         answer = Answer;
+    }
+
+    // You correctly implemented ICloneable (1 point)
+    public object Clone()
+    {
+        return new Flashcard(
+            question: Question,
+            answer: Answer,
+            options: new List<string>(MultipleChoiceOptions)
+        )
+        {
+            TimesReviewed = TimesReviewed,
+            CorrectCount = CorrectCount,
+            ConsecutiveCorrect = ConsecutiveCorrect
+        };
     }
 }

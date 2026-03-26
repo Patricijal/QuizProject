@@ -31,7 +31,7 @@ public sealed class MenuManager
     }
 
     // Pattern matching is used (1 point)
-    public bool HandleMainMenuChoice(string choice)
+    public bool HandleMainMenuChoice(string? choice)
     {
         var action = choice switch
         {
@@ -45,7 +45,14 @@ public sealed class MenuManager
             _ => () => Console.WriteLine("Invalid choice.")
         };
 
-        action();
+        try
+        {
+            action();
+        }
+        catch (InvalidDeckOperationException ex)
+        {
+            Console.WriteLine($"{ex.Message}\n");
+        }
         return choice != "7";
     }
 
@@ -61,12 +68,12 @@ public sealed class MenuManager
         Console.WriteLine("7. Import deck");
         Console.Write("Choose (1-7): ");
 
-        string choice = Console.ReadLine();
+        string? choice = Console.ReadLine();
         HandleDeckManagementChoice(choice);
     }
 
     // Pattern matching is used (1 point)
-    private void HandleDeckManagementChoice(string choice)
+    private void HandleDeckManagementChoice(string? choice)
     {
         var action = choice switch
         {
@@ -80,7 +87,15 @@ public sealed class MenuManager
             _ => () => Console.WriteLine("Invalid choice. Please try again.")
         };
 
-        action();
+        // There are try-catch blocks in places where errors may occur (1 point)
+        try
+        {
+            action();
+        }
+        catch (InvalidDeckOperationException ex)
+        {
+            Console.WriteLine($"{ex.Message}\n");
+        }
     }
 }
 

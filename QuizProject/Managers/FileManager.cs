@@ -45,7 +45,7 @@ public static class FileManager
         Console.WriteLine($"Deck '{deck.Name}' saved successfully.");
     }
 
-    public static Deck LoadDeck(string fileName)
+    public static Deck? LoadDeck(string fileName)
     {
         string filePath = Path.Combine(DecksFolder, fileName);
 
@@ -114,7 +114,7 @@ public static class FileManager
         return exportPath;
     }
 
-    public static Deck ImportDeck(string importPath)
+    public static Deck? ImportDeck(string importPath)
     {
         if (!File.Exists(importPath))
         {
@@ -125,7 +125,7 @@ public static class FileManager
         return DeserializeDeck(json, Path.GetFileNameWithoutExtension(importPath));
     }
 
-    private static Deck DeserializeDeck(string json, string fallbackName)
+    private static Deck? DeserializeDeck(string json, string fallbackName)
     {
         if (string.IsNullOrWhiteSpace(json))
         {

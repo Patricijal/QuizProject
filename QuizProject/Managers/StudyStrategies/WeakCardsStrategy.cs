@@ -31,7 +31,7 @@ public class WeakCardsStrategy : IStudyStrategy
 
         Console.WriteLine($"Answer: {card.Answer}");
         Console.Write("Were you correct? (y/n): ");
-        string response = Console.ReadLine()?.ToLower();
+        string? response = Console.ReadLine()?.ToLower();
 
         card.TimesReviewed++;
 

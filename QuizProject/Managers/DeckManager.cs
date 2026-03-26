@@ -1,22 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 public class DeckManager
 {
     private readonly List<Deck> _decks;
+
+    public event EventHandler<Deck>? DeckCreated;
+    public event EventHandler<Flashcard>? CardAdded;
 
     public DeckManager(List<Deck> decks)
     {
         _decks = decks;
     }
 
-    public Deck SelectDeck()
+    public Deck? SelectDeck()
+    {
+        var result = SelectDeckResult();
+        if (!result.Success)
+        {
+            Console.WriteLine($"{result.Message}\n");
+        }
+
+        return result.Data;
+    }
+
+    public OperationResult<Deck> SelectDeckResult()
     {
         if (_decks.Count == 0)
         {
-            Console.WriteLine("\nNo decks available.");
-            return null;
+            return OperationResult<Deck>.Fail("No decks available.");
         }
 
         Console.WriteLine("\nSeleck deck:");
@@ -28,32 +40,30 @@ public class DeckManager
 
         if (int.TryParse(Console.ReadLine(), out int choice) && choice >= 1 && choice <= _decks.Count)
         {
-            return _decks[choice - 1];
+            return OperationResult<Deck>.Ok(_decks[choice - 1], "Deck selected.");
         }
-        else
-        {
-            Console.WriteLine("Invalid selection. Please try again.");
-            return null;
-        }
+
+        return OperationResult<Deck>.Fail("Invalid selection. Please try again.");
     }
 
     public void CreateDeck()
     {
         Console.Write("\nEnter new deck name: ");
-        string name = Console.ReadLine();
+        string? name = Console.ReadLine();
 
         if (string.IsNullOrWhiteSpace(name))
         {
-            Console.WriteLine("Deck name cannot be empty. Please try again.");
+            throw new InvalidDeckOperationException("Deck name cannot be empty. Please try again.");
         }
         else if (_decks.Exists(d => d.Name.Equals(name, StringComparison.OrdinalIgnoreCase)))
         {
-            Console.WriteLine($"A deck named '{name}' already exists.");
+            throw new InvalidDeckOperationException($"A deck named '{name}' already exists.");
         }
         else
         {
             var deck = new Deck(name);
             _decks.Add(deck);
+            DeckCreated?.Invoke(this, deck);
             FileManager.SaveDeck(deck);
             Console.WriteLine($"Deck '{name}' created successfully.");
 
@@ -73,7 +83,10 @@ public class DeckManager
     public void AddCardToDeck()
     {
         var deck = SelectDeck();
-        if (deck == null) return;
+        if (deck == null)
+        {
+            throw new InvalidDeckOperationException("No valid deck selected.");
+        }
 
         do
         {
@@ -86,14 +99,13 @@ public class DeckManager
     public void AddCardToDeck(Deck deck)
     {
         Console.Write("Question/Term: ");
-        string question = Console.ReadLine();
+        string? question = Console.ReadLine();
         Console.Write("Answer: ");
-        string answer = Console.ReadLine();
+        string? answer = Console.ReadLine();
 
         if (string.IsNullOrWhiteSpace(question) || string.IsNullOrWhiteSpace(answer))
         {
-            Console.WriteLine("Question/Term or Answer can't be empty.\n");
-            return;
+            throw new InvalidDeckOperationException("Question/Term or Answer can't be empty.");
         }
 
         Console.Write("Add 4 options? (y/n): ");
@@ -105,7 +117,7 @@ public class DeckManager
             for (int i = 1; i < 4; i++)
             {
                 Console.Write($"Wrong option {i}: ");
-                string wrongAnswer = Console.ReadLine();
+                string? wrongAnswer = Console.ReadLine();
                 if (!string.IsNullOrWhiteSpace(wrongAnswer))
                 {
                     options.Add(wrongAnswer);
@@ -113,7 +125,9 @@ public class DeckManager
             }
         }
 
-        deck.AddCard(new Flashcard(question, answer, options));
+        var card = new Flashcard(question, answer, options);
+        deck.AddCard(card);
+        CardAdded?.Invoke(this, card);
         FileManager.SaveDeck(deck);
         Console.WriteLine("Card added successfully.");
     }
@@ -121,12 +135,14 @@ public class DeckManager
     public void DeleteCardFromDeck()
     {
         var deck = SelectDeck();
-        if (deck == null) return;
+        if (deck == null)
+        {
+            throw new InvalidDeckOperationException("No valid deck selected.");
+        }
 
         if (deck.Cards.Count == 0)
         {
-            Console.WriteLine("This deck has no cards to delete.");
-            return;
+            throw new InvalidDeckOperationException("This deck has no cards to delete.");
         }
 
         Console.WriteLine($"\nCards in '{deck.Name}':");
@@ -153,7 +169,7 @@ public class DeckManager
         }
         else
         {
-            Console.WriteLine("Invalid selection.");
+            throw new InvalidDeckOperationException("Invalid card selection.");
         }
     }
 
@@ -198,8 +214,14 @@ public class DeckManager
         if (deck == null) return;
 
         Console.Write("Enter export path (e.g., C:\\Export\\deck.json): ");
-        string path = Console.ReadLine();
+        string? path = Console.ReadLine();
 
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new InvalidDeckOperationException("Export path cannot be empty.");
+        }
+
+        // There are try-catch blocks in places where errors may occur (1 point)
         try
         {
             FileManager.ExportDeck(deck, path);
@@ -214,8 +236,14 @@ public class DeckManager
     public void ImportDeck()
     {
         Console.Write("Enter file path: ");
-        string path = Console.ReadLine()?.Trim().Trim('"');
+        string? path = Console.ReadLine()?.Trim().Trim('"');
 
+        if (string.IsNullOrWhiteSpace(path))
+        {
+            throw new InvalidDeckOperationException("Import path cannot be empty.");
+        }
+
+        // There are try-catch blocks in places where errors may occur (1 point)
         try
         {
             var deck = FileManager.ImportDeck(path);

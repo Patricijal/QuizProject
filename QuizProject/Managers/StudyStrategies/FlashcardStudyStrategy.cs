@@ -23,7 +23,7 @@ public class FlashcardStudyStrategy : IStudyStrategy
         Console.WriteLine($"Answer: {answer}");
         Console.Write("Were you correct? (y/n): ");
 
-        string response = Console.ReadLine()?.ToLower();
+        string? response = Console.ReadLine()?.ToLower();
         card.TimesReviewed++;
 
         if (response == "y")

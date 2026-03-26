@@ -46,8 +46,10 @@ public class StatisticsManager
     private void DisplayDeckReviewStats(Deck deck)
     {
         int totalReviews = deck.Cards.Sum(c => c.TimesReviewed);
+        int reviewedCards = deck.GetReviewedCardsCount();
 
         Console.WriteLine($"   Reviews: {totalReviews}");
+        Console.WriteLine($"   Reviewed cards: {reviewedCards}");
         Console.WriteLine($"   Success rate: {deck.GetSuccessRate():F1}%");
     }
 
@@ -55,22 +57,17 @@ public class StatisticsManager
     {
         if (deck.Cards.Count == 0) return;
 
-        // IComparable<T> - rūšiuoja per CompareTo (0.5 taško)
-        var sorted = deck.Cards
-            .Where(c => c.TimesReviewed > 0) // Delegates or lambda functions are used (1.5 points)
-            .OrderBy(c => c)  // naudoja CompareTo
+        var top3Weakest = deck.GetTopWeakCards(3)
+            .Select(c => (Flashcard)c.Clone())
             .ToList();
-
-        // You use the Range type(0.5 points)
-        var top3Weakest = sorted[..Math.Min(3, sorted.Count)];
 
         if (top3Weakest.Count == 0) return;
 
         Console.WriteLine("   Top weakest cards:");
         foreach (var card in top3Weakest)
         {
-            var (question, answer) = card;
-            Console.WriteLine($"     - {question}: {answer} ({card:S})");
+            var (question, answer, successRate) = card;
+            Console.WriteLine($"     - {question}: {answer} ({successRate:F1}%)");
         }
     }
 

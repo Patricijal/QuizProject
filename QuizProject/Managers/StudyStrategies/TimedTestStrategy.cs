@@ -45,7 +45,7 @@ public class TimedTestStrategy : IStudyStrategy
             double timeLeft = timeLimit - stopwatch.Elapsed.TotalSeconds;
             Console.WriteLine($"[Time left: {timeLeft:F1}s] {card.Question}");
             Console.Write("Answer: ");
-            string answer = Console.ReadLine();
+            string? answer = Console.ReadLine();
 
             answered++;
             card.TimesReviewed++;

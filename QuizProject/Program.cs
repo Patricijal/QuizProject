@@ -10,6 +10,8 @@ class Program
         List<Deck> decks = new List<Deck>();
 
         var deckManager = new DeckManager(decks);
+        deckManager.DeckCreated += (_, deck) => Console.WriteLine($"[Event] Deck created: {deck.Name}");
+        deckManager.CardAdded += (_, card) => Console.WriteLine($"[Event] Card added: {card.Question}");
         var studyManager = new StudySessionManager(deckManager);
         var statsManager = new StatisticsManager(decks);
         var menuManager = new MenuManager(studyManager, deckManager, statsManager);
@@ -26,7 +28,7 @@ class Program
         while (running)
         {
             menuManager.ShowMainMenu();
-            string choice = Console.ReadLine();
+            string? choice = Console.ReadLine();
             running = menuManager.HandleMainMenuChoice(choice);
         }
     }
